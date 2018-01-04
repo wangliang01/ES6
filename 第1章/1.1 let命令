@@ -1,0 +1,80 @@
+1. 基本用法
+ES5新增了let命令，用于声明变量，其用法类似于var,但是所声明变量只在let命令所在的代码块内有效。
+
+{
+	let a = 10
+	var b = 1
+}
+
+a // a is not defined
+b // 1
+
+for循环的计数器，就是适合用let命令
+for (let i = 0; i < 5; i++) {
+	(function(){
+		console.log(i)
+	})()
+}
+
+// 0
+// 1
+// 2
+// 3
+// 4
+
+
+i // i is not defined
+
+
+2.不存在变量提升
+let不像var那样会发生"变量提升"的现象，所以，变量一定要在声明后再使用，否则报错。
+
+console.log(foo) // ReferenceError: foo is not defined
+let foo = 2
+
+3.暂时性死区
+只要在块级作用域内存在let命令，它所声明的变量就"绑定"这个区域，不再受外部的影响
+
+var temp = 123
+
+if (true) {
+	temp = 'abc'
+	let temp
+}
+
+// 上面的代码存在全局变量temp,但是在块级作用域内let又声明了一个局部变量temp，导致后者绑定了这个块级作用域，所以在let声明变量前，对temp赋值会报错。
+
+ES6明确规定，如果在区块中存在let和const命令，则这个区块对这些命令声明的变量从一开始就形成封闭作用域。只要在声明之前使用这个变量，就会报错。
+
+总之，在代码块内，使用let命令声明变量之前，该变量是不可用的，这个语法叫做"暂时性死区"   在变量声明之前，都属于变量的"死区"
+
+function bar (x = y, y = 2) {
+	return [x, y]
+}
+
+bar() //  ReferenceError: y is not defined
+
+
+4.不允许重复声明
+let 不允许在相同作用域内重复声明同一个变量
+
+function fn () {
+	let a = 10
+	var a = 'abc'
+}
+
+// Uncaught SyntaxError: Identifier 'a' has already been declared
+
+不能在函数内部重新声明参数
+
+function Func (args) {
+	let args; //报错
+}
+
+经测： 在谷歌浏览器测试没有报错
+
+function Func (args) {
+	{
+		let args; //不报错
+	}
+}
